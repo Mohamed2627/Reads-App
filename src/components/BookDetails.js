@@ -1,9 +1,17 @@
-import React from 'react';
-import * as booksApis from "../BooksAPI"
+import React, {memo, useEffect, useState} from 'react';
+import * as booksApis from "../BooksAPI";
 
 function BookDetails({book, handleChange}) {
-    // console.log(book)
-    // console.log(handleChange)
+
+    const [shelf, setShelf] = useState("");
+
+    useEffect(() => {
+        const getBookById = async () => {
+            const res = await booksApis.get(book.id);
+            setShelf(res.shelf)
+        }
+        getBookById();
+    },[book.id])
 
     const change = (event) => {
         handleChange(book, event.target.value)
@@ -17,11 +25,11 @@ function BookDetails({book, handleChange}) {
                         width: 128,
                         height: 193,
                         backgroundImage:
-                            `url(${book?.imageLinks.thumbnail})`,
+                            `url(${book?.imageLinks?.thumbnail})`,
                     }}
                 ></div>
                 <div className="book-shelf-changer">
-                    <select value={book?.shelf? book?.shelf: "none"} onChange={change}>
+                    <select value={shelf} onChange={change}>
                         <option value="none" disabled>
                             Move to...
                         </option>
@@ -40,4 +48,4 @@ function BookDetails({book, handleChange}) {
     )
 }
 
-export default BookDetails
+export default  memo(BookDetails)

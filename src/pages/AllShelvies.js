@@ -1,11 +1,25 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import CurrentlyReading from '../components/CurrentlyReading';
-// import WantToRead from '../components/WantToRead';
-// import Read from '../components/Read';
 import * as booksApis from "../BooksAPI";
-import BookDetails from '../components/BookDetails';
+import BookShelf from '../components/BookShelf';
+
+const shelves = [
+    {
+        title: 'Currently Reading',
+        shelf: 'currentlyReading',
+    },
+    {
+        title: 'Want to Read',
+        shelf: 'wantToRead',
+    },
+    {
+        title: 'Read',
+        shelf: 'read',
+    },
+    
+];
 
 
 function AllShelvies() {
@@ -14,28 +28,19 @@ function AllShelvies() {
 
     const getAllBooks = async () => {
         const res = await booksApis.getAll();
-        console.log(res)
         setBooks(res)
     }
-    // getAllBooks();
 
     const handleChange = (book, shelf) => {
         const updateBooks = async () => {
             const res = await booksApis.update(book, shelf)
-            console.log(res)
         }
         updateBooks();
         getAllBooks();
     }
 
     useEffect(() => {
-        const getAllBooks = async () => {
-            const res = await booksApis.getAll();
-            console.log(res)
-            setBooks(res)
-        }
         getAllBooks();
-
     }, []);
 
     return (
@@ -45,57 +50,15 @@ function AllShelvies() {
             </div>
             <div className="list-books-content">
                 <div>
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Currently Reading</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {books.filter((book) => book.shelf === "currentlyReading").map((book) => (
-                                    <li key={book.id}>
-                                        <BookDetails book={book} handleChange={handleChange} />
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </div>
-                    {/* <
-                        CurrentlyReading
-                        currentlyReading={books.filter((book) => book.shelf === "currentlyReading")}
-                        onChange={handleChange}
-                    /> */}
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Want to Read</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {books.filter((book) => book.shelf === "wantToRead").map((book) => (
-                                    <li key={book.id}>
-                                        <BookDetails book={book} handleChange={handleChange}/>
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </div>
-                    {/* <
-                        WantToRead
-                        wantToRead={books.filter((book) => book.shelf === "wantToRead")}
-                        onChange={handleChange}
-                    /> */}
-                    <div className="bookshelf">
-                        <h2 className="bookshelf-title">Read</h2>
-                        <div className="bookshelf-books">
-                            <ol className="books-grid">
-                                {books.filter((book) => book.shelf === "read").map((book) => (
-                                    <li key={book.id}>
-                                        <BookDetails book={book} handleChange={handleChange} />
-                                    </li>
-                                ))}
-                            </ol>
-                        </div>
-                    </div>
-                    {/* <
-                        Read
-                        read={books.filter((book) => book.shelf === "read")}
-                        onChange={handleChange}
-                    /> */}
+                    {shelves.map((shelf) => (
+                        <BookShelf
+                        key={shelf.shelf}
+                        books={books}
+                        title={shelf.title}
+                        shelf={shelf.shelf}
+                        handleChange={handleChange}
+                        />
+                    ))}
                 </div>
             </div>
             <div className="open-search">
